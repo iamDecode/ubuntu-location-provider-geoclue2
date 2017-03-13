@@ -1,0 +1,4 @@
+build
+cross_compile
+temp
+cmake-build-debug
