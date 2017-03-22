@@ -23,25 +23,26 @@
 
 namespace com
 {
-namespace ubuntu
-{
-namespace location
-{
-namespace wgs84
-{
-namespace tag
-{
-struct Altitude;
-}
-typedef Coordinate<tag::Altitude, units::Length> Altitude;
+    namespace ubuntu
+    {
+        namespace location
+        {
+            namespace wgs84
+            {
+                namespace tag
+                {
+                    struct Altitude;
+                }
 
-template<>
-struct CoordinateTraits<Altitude>
-{
-    static void check_and_throw_if_invalid(const typename Altitude::Quantity&) {}
-};
-}
-}
-}
+                typedef Coordinate<tag::Altitude, units::Length> Altitude;
+
+                template<>
+                struct CoordinateTraits<Altitude>
+                {
+                    static void check_and_throw_if_invalid(const typename Altitude::Quantity&) {}
+                };
+            }
+        }
+    }
 }
 #endif // LOCATION_SERVICE_COM_UBUNTU_LOCATION_WGS84_ALTITUDE_H_

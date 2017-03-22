@@ -8,11 +8,11 @@ int main(int, char**){
     Bus::Ptr BUS = std::make_shared<Bus>(WellKnownBus::system);
     BUS->install_executor(asio::make_executor(BUS));
 
-    /// Create service on the bus
+    // Create service on the bus
     auto service = Service::add_service<WolfpackService>(BUS);
     auto gcService = Service::use_service<org::freedesktop::Geoclue2>(BUS);
 
-    /// Add object
+    // Add object
     auto obj = service->add_object_for_path(types::ObjectPath("/com/wolfpack/geoclue2/Service/Provider"));
     auto gcobj = gcService->object_for_path(types::ObjectPath("/org/freedesktop/GeoClue2/Manager"));
 
@@ -32,6 +32,6 @@ int main(int, char**){
     gcObj->connectPositionChangedSignal();
     gcObj->connectPropertyLocationChanged();
     gcObj->authorize();
-    //gcObj->startPositionUpdates();
+    gcObj->startPositionUpdates();
     BUS->run();
 }

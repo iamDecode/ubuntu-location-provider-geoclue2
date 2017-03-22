@@ -19,8 +19,6 @@ namespace org {
                     static const std::string s{"org.freedesktop.GeoClue2.Manager"};
                     return s;
                 };
-                // Timeout from where-am-i demo
-                //DBUS_CPP_METHOD_WITH_TIMEOUT_DEF(GetClient, Manager, 30000)
                 DBUS_CPP_METHOD_DEF(GetClient, Manager)
             };
 
@@ -62,17 +60,3 @@ namespace org {
         };
     }
 }
-//namespace core {
-//    namespace dbus {
-//        namespace traits {
-//            template<>
-//                struct Service<Manager> {
-//                    inline static const std::string& interface_name()
-//                    {
-//                        static const std::string s {"org.freedesktop.GeoClue2.Manager"};
-//                        return s;
-//                    }
-//                };
-//        }
-//    }
-//}

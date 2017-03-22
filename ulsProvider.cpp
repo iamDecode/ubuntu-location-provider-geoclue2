@@ -2,7 +2,6 @@
 #include "ulsProvider.hpp"
 #include "geoclueProvider.hpp"
 
-
 using namespace core::dbus;
 using namespace com::ubuntu::location;
 
@@ -10,17 +9,19 @@ void ULSObject::emitPositionChangedSignal(Position pos) {
     auto sig = this->obj->get_signal<WolfpackMemberInterface::Signals::PositionChanged>();
     sig->emit(pos);
 }
+
 void ULSObject::emitVelocityChangedSignal(Velocity pos) {
     auto sig = this->obj->get_signal<WolfpackMemberInterface::Signals::VelocityChanged>();
     sig->emit(pos);
 }
+
 void ULSObject::emitHeadingChangedSignal(Heading pos) {
-    // TODO: actually emit heading instead of position
     auto sig = this->obj->get_signal<WolfpackMemberInterface::Signals::HeadingChanged>();
     sig->emit(pos);
 }
 
 void ULSObject::registerRequiresMethod() {
+    //ADD COMMENT HERE
     std::function<void(const core::dbus::Message::Ptr&)> func = [this](const core::dbus::Message::Ptr& msg){
 
         int r; 
@@ -61,6 +62,7 @@ void ULSObject::registerStopHeadingUpdatesMethod() {
     this->obj->install_method_handler<WolfpackMemberInterface::Method::StopHeadingUpdates>(func);
 }
 void ULSObject::registerStartVelocityUpdatesMethod() {
+    //ADD COMMENT HERE
     std::function<void(const core::dbus::Message::Ptr&)> func = [this](const core::dbus::Message::Ptr& msg){
 
         auto reply = Message::make_method_return(msg);
@@ -85,6 +87,7 @@ void ULSObject::registerStopVelocityUpdatesMethod() {
     };
     this->obj->install_method_handler<WolfpackMemberInterface::Method::StopVelocityUpdates>(func);
 }
+
 void ULSObject::registerStartPositionUpdatesMethod() {
     std::function<void(const core::dbus::Message::Ptr&)> func = [this](const core::dbus::Message::Ptr& msg){
 
@@ -99,6 +102,7 @@ void ULSObject::registerStartPositionUpdatesMethod() {
 }
 
 void ULSObject::registerStopPositionUpdatesMethod() {
+    //ADD COMMENT HERE
     std::function<void(const core::dbus::Message::Ptr&)> func = [this](const core::dbus::Message::Ptr& msg){
 
         auto reply = Message::make_method_return(msg);
@@ -112,7 +116,8 @@ void ULSObject::registerStopPositionUpdatesMethod() {
 }
 
 void ULSObject::registerOnReferenceLocationChangedMethod() {
-    std::function<void(const core::dbus::Message::Ptr&)> func = [this](const core::dbus::Message::Ptr& msg){
+     //ADD COMMENT HERE
+     std::function<void(const core::dbus::Message::Ptr&)> func = [this](const core::dbus::Message::Ptr& msg){
 
         // Only implemented because it doesn't work otherwise
         auto reply = Message::make_method_return(msg);
@@ -124,6 +129,7 @@ void ULSObject::registerOnReferenceLocationChangedMethod() {
 }
 
 void ULSObject::registerEmitSignalMethod() {
+    //ADD COMMENT HERE
     std::function<void(const core::dbus::Message::Ptr&)> func = [this](const core::dbus::Message::Ptr& msg){
 
         Position pos;
@@ -136,7 +142,7 @@ void ULSObject::registerEmitSignalMethod() {
         this->bus->send(reply);
  
     }; 
-    this->obj->install_method_handler<WolfpackMemberInterface::Method::EmitSignal>(func); /// Pointer to signal
+    this->obj->install_method_handler<WolfpackMemberInterface::Method::EmitSignal>(func); // Pointer to signal
 }
 
 ULSObject::ULSObject(std::shared_ptr<core::dbus::Object> obj, std::shared_ptr<GeoclueObject> gcobj, Bus::Ptr bus) {
