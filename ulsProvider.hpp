@@ -14,24 +14,26 @@
 
 class GeoclueObject;
 class ULSObject {
-private:
-    std::shared_ptr<core::dbus::Object> obj;
-    std::shared_ptr<GeoclueObject> gcobj;
-    core::dbus::Bus::Ptr bus;
-public:
-    ULSObject(std::shared_ptr<core::dbus::Object> obj, std::shared_ptr<GeoclueObject> gcobj, core::dbus::Bus::Ptr bus);
-    void emitPositionChangedSignal(com::ubuntu::location::Position pos);
-    void registerStartPositionUpdatesMethod();
-    void registerStopPositionUpdatesMethod();
-    void emitHeadingChangedSignal(com::ubuntu::location::Heading pos);
-    void registerStartHeadingUpdatesMethod();
-    void registerStopHeadingUpdatesMethod();
-    void emitVelocityChangedSignal(com::ubuntu::location::Velocity pos);
-    void registerStartVelocityUpdatesMethod();
-    void registerStopVelocityUpdatesMethod();
-    void registerRequiresMethod();
-    void registerOnReferenceLocationChangedMethod();
-    void registerEmitSignalMethod();
-    void handle_command(core::dbus::Message::Ptr&);
+
+    private:
+        std::shared_ptr<core::dbus::Object> obj;
+        std::shared_ptr<GeoclueObject> gcobj;
+        core::dbus::Bus::Ptr bus;
+
+    public:
+        ULSObject(std::shared_ptr<core::dbus::Object> obj, std::shared_ptr<GeoclueObject> gcobj, core::dbus::Bus::Ptr bus);
+        void emitPositionChangedSignal(com::ubuntu::location::Position pos);
+        void registerStartPositionUpdatesMethod();
+        void registerStopPositionUpdatesMethod();
+        void emitHeadingChangedSignal(com::ubuntu::location::Heading pos);
+        void registerStartHeadingUpdatesMethod();
+        void registerStopHeadingUpdatesMethod();
+        void emitVelocityChangedSignal(com::ubuntu::location::Velocity pos);
+        void registerStartVelocityUpdatesMethod();
+        void registerStopVelocityUpdatesMethod();
+        void registerRequiresMethod();
+        void registerOnReferenceLocationChangedMethod();
+        void registerEmitSignalMethod();
+        void handle_command(core::dbus::Message::Ptr&);
 };
 #endif // ULSPROVIDERHPP

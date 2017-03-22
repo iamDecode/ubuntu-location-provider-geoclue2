@@ -22,14 +22,14 @@
 
 namespace com
 {
-namespace ubuntu
-{
-namespace location
-{
-template<typename T>
-using Optional = boost::optional<T>;
-}
-}
+    namespace ubuntu
+    {
+        namespace location
+        {
+            template<typename T>
+            using Optional = boost::optional<T>;
+        }
+    }
 }
 
 #endif // LOCATION_SERVICE_COM_UBUNTU_LOCATION_OPTIONAL_H_

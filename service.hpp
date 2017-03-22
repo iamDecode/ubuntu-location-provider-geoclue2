@@ -10,11 +10,13 @@
 #include "position.h"
 
 struct WolfpackMemberInterface {
+
     struct Signals {
         DBUS_CPP_SIGNAL_DEF(PositionChanged, WolfpackMemberInterface, com::ubuntu::location::Position)
         DBUS_CPP_SIGNAL_DEF(HeadingChanged, WolfpackMemberInterface, com::ubuntu::location::Heading)
         DBUS_CPP_SIGNAL_DEF(VelocityChanged, WolfpackMemberInterface, com::ubuntu::location::Velocity)
     };
+
     struct Method {
          DBUS_CPP_METHOD_DEF(Requires, WolfpackMemberInterface)
          DBUS_CPP_METHOD_DEF(OnReferenceLocationChanged, WolfpackMemberInterface)
@@ -25,16 +27,6 @@ struct WolfpackMemberInterface {
          DBUS_CPP_METHOD_DEF(StartHeadingUpdates, WolfpackMemberInterface)
          DBUS_CPP_METHOD_DEF(StopHeadingUpdates, WolfpackMemberInterface)
          DBUS_CPP_METHOD_DEF(EmitSignal, WolfpackMemberInterface)
-//        struct Requires {
-//           typedef WolfpackService Interface;
-//           inline static const std::string name() {
-//               return "Requires";
-//           };
-//
-//            inline static const std::chrono::milliseconds default_timeout() {
-//              return std::chrono::milliseconds{10};
-//           };
-//        };
     };
 };
 struct WolfpackService {
