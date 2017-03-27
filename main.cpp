@@ -20,7 +20,6 @@ int main(int, char**){
     auto ulsObj = std::make_shared<ULSObject>(obj, gcObj, BUS);
     gcObj->uobj = ulsObj;
     ulsObj->registerRequiresMethod();
-    ulsObj->registerEmitSignalMethod();
     ulsObj->registerStartPositionUpdatesMethod();
     ulsObj->registerStopPositionUpdatesMethod();
     ulsObj->registerStartVelocityUpdatesMethod();
@@ -30,8 +29,6 @@ int main(int, char**){
     ulsObj->registerOnReferenceLocationChangedMethod();
     gcObj->prepareClient();
     gcObj->connectPositionChangedSignal();
-    gcObj->connectPropertyLocationChanged();
     gcObj->authorize();
-    gcObj->startPositionUpdates();
     BUS->run();
 }
