@@ -15,24 +15,27 @@ GeoclueObject::GeoclueObject(std::shared_ptr<Object> obj, Bus::Ptr bus, std::sha
 }
 
 Heading GeoclueObject::getHeadingFromLocation(std::shared_ptr<core::dbus::Object> lobj) {
+    // Transforms a Geoclue Location into a Ubuntu Location Service Heading
+    //
     double heading = lobj->get_property<org::freedesktop::Geoclue2::Location::Heading>()->get();
     return heading * units::Degrees;
 }
 
 Velocity GeoclueObject::getVelocityFromLocation(std::shared_ptr<core::dbus::Object> lobj) {
+    // Transforms a Geoclue Location into a Ubuntu Location Service Velocity
+
     double velocity = lobj->get_property<org::freedesktop::Geoclue2::Location::Speed>()->get();
     return velocity * units::MetersPerSecond;
 }
 
 Position GeoclueObject::getPositionFromLocation(std::shared_ptr<core::dbus::Object> lobj) {
-    //ADD COMMENT HERE
+    // Transforms a Geoclue Location into a Ubuntu Location Service Position
+
     Position pos;
 
     double lat = lobj->get_property<org::freedesktop::Geoclue2::Location::Latitude>()->get();
     double longitude = lobj->get_property<org::freedesktop::Geoclue2::Location::Longitude>()->get();
     double altitude = lobj->get_property<org::freedesktop::Geoclue2::Location::Altitude>()->get();
-
-    std::cerr << "test";
 
     pos.latitude = wgs84::Latitude{ lat * units::Degrees};
     pos.longitude = wgs84::Longitude{ longitude * units::Degrees};
@@ -47,60 +50,49 @@ Position GeoclueObject::getPositionFromLocation(std::shared_ptr<core::dbus::Obje
     return pos;
 }
 
-void GeoclueObject::connectPropertyLocationChanged() {
-    //ADD COMMENT HERE
-    auto sig = this->client->get_signal<core::dbus::interfaces::Properties::Signals::PropertiesChanged>();
-    sig->connect(
-        [this](std::tuple<
-                    std::string, 
-                    std::map<std::string, types::Variant>,
-                    std::vector<std::string>
-               > args )
-        {
-            std::string iname;
-            std::map<std::string, types::Variant> changes;
-            std::vector<std::string> junk;
-            std::tie(iname, changes, junk) = args;
-            if (changes.find("Location") == changes.end()) {
-                return;
-            }
-            auto path =  changes["Location"];
-            auto objectPath = path.as<types::ObjectPath>();
-            std::cerr << objectPath;
-            this->updateUsingLocationPath(objectPath);
-
-        }
-    );
-}
-
 void GeoclueObject::updateUsingLocationPath(types::ObjectPath op) {
-    //ADD COMMENT HERE
+    // If available, updates the position, velocity, and heading
     auto lobj = this->service->object_for_path(op);
-    if (this->status & this->client_status::position) {
-        this->uobj->emitPositionChangedSignal(this->getPositionFromLocation(lobj));
+    // During testing, GeoClue sometimes claims not to support position even though the documentation said it does. Therefore, to not crash the program, we catch the exception
+    try {
+        if (this->status & this->client_status::position) {
+            this->uobj->emitPositionChangedSignal(this->getPositionFromLocation(lobj));
+        }
     }
-    if (this->status & this->client_status::velocity) {
-        this->uobj->emitVelocityChangedSignal(this->getVelocityFromLocation(lobj));
+    catch (...){
+        std::cerr << "Geoclue doesn't support position" << "\n";
     }
-    if (this->status & this->client_status::heading) {
-        this->uobj->emitHeadingChangedSignal(this->getHeadingFromLocation(lobj));
+    
+    // During testing, GeoClue sometimes claims not to support speed even though the documentation claims it does. Therefore, to not crash the program, we catch the exception
+    try {
+        if (this->status & this->client_status::velocity) {
+            this->uobj->emitVelocityChangedSignal(this->getVelocityFromLocation(lobj));
+        }
     }
-    std::cerr << this->status;
+    catch (...){
+        std::cerr << "Geoclue doesn't support speed" << "\n";
+    }
+    // During testing, GeoClue sometimes claims not to support heading even though the documentation claims it does. Therefore, to not crash the program, we catch the exception
+    try {
+        if (this->status & this->client_status::heading) {
+            this->uobj->emitHeadingChangedSignal(this->getHeadingFromLocation(lobj));
+        }
+    }
+    catch (...){
+        std::cerr << "Geoclue doesn't support heading" << "\n";
+    }
 }
-
 void GeoclueObject::connectPositionChangedSignal() {
-    //ADD COMMENT HERE
-    auto sig = this->client->get_signal<org::freedesktop::Geoclue2::Client::LocationUpdated>();
-    sig->connect(
-        [this](const types::ObjectPath arg)
+    // Adds a signal handler to handle location updates from Geoclue
+    this->luSignal = this->client->get_signal<org::freedesktop::Geoclue2::Client::LocationUpdated>();
+    this->luSignal->connect(
+        [this](const std::tuple<types::ObjectPath,types::ObjectPath> arg)
         {
-
-            Position pos;
-
-            std::cerr << "test";
-            pos.latitude = wgs84::Latitude{1.0 * units::Degrees};
-            pos.longitude = wgs84::Longitude{1.0 * units::Degrees};
-            this->uobj->emitPositionChangedSignal(pos);
+            types::ObjectPath before;
+            types::ObjectPath after;
+            std::tie(before, after) = arg;
+            std::cerr << "Geoclue position changed" << "\n";
+            this->updateUsingLocationPath(after);
         }
     );
 }
@@ -115,10 +107,10 @@ void GeoclueObject::prepareClient() {
     */
 
     this->client = this->GetClient();
-    auto property = this -> client -> get_property<org::freedesktop::Geoclue2::Client::DistanceThreshold>();
+    auto property = this->client->get_property<org::freedesktop::Geoclue2::Client::DistanceThreshold>();
     property->set(10);
     auto ral = this->client->get_property<org::freedesktop::Geoclue2::Client::RequestedAccuracyLevel>();
-    property->set(8);
+    ral->set(8);
 }
 
 std::shared_ptr<Object> GeoclueObject::GetClient() {
@@ -129,19 +121,27 @@ std::shared_ptr<Object> GeoclueObject::GetClient() {
 }
 
 void GeoclueObject::authorize() {
-    // Set desktop id
+    // Authorizes the client by setting the DesktopId property
 
     auto property = this->client->get_property<org::freedesktop::Geoclue2::Client::DesktopId>();
     property->set("geoclue2-provider");
 }
 
 void GeoclueObject::startClient() {
-    std::cerr << "start client";
-    this->client->invoke_method_asynchronously<org::freedesktop::Geoclue2::Client::Start, void>();
+    // Start the Geoclue Client
+    std::cerr << "Start client" << "\n";
+    this->client->invoke_method_synchronously<org::freedesktop::Geoclue2::Client::Start, void>();
+    auto current_loc = this->client->get_property<org::freedesktop::Geoclue2::Client::Location>()->get();
+    // If the location property is already set, use it
+    if (current_loc != types::ObjectPath("/")){
+        this->updateUsingLocationPath(current_loc);
+    }
+    
 }
 
 void GeoclueObject::stopClient() {
-    std::cerr << "stop client";
+    // Stops the Geoclue client again
+    std::cerr << "Stop client" << "\n";
     this->client->invoke_method_asynchronously<org::freedesktop::Geoclue2::Client::Stop, void>();
 }
 
@@ -183,7 +183,6 @@ void GeoclueObject::startPositionUpdates() {
     // Start receiving events about current location
 
     auto status = this->status.fetch_or(this->client_status::position);
-    std::cerr << this->status;
     if (!status) {
         this->startClient();
     }

@@ -1,3 +1,5 @@
+#ifndef GEOCLUE2_H
+#define GEOCLUE2_H
 #include <core/dbus/service.h>
 #include <core/dbus/traits/service.h>
 #include <core/dbus/types/struct.h>
@@ -32,7 +34,17 @@ namespace org {
 
                 DBUS_CPP_METHOD_DEF(Stop, Client)
 
-                DBUS_CPP_SIGNAL_DEF(LocationUpdated, Client, core::dbus::types::ObjectPath)
+		// LocationUpdated Signal
+		struct LocationUpdated 
+		{
+		    inline static const std::string &name()
+		    { 
+                        static const std::string s{"LocationUpdated"};
+			return s;
+		    };
+		    typedef Client Interface;
+		    typedef std::tuple<core::dbus::types::ObjectPath,core::dbus::types::ObjectPath> ArgumentType; 
+		}; 
 
                 DBUS_CPP_WRITABLE_PROPERTY_DEF(DesktopId, Client, std::string)
 
@@ -60,3 +72,4 @@ namespace org {
         };
     }
 }
+#endif  //GEOCLUE2_H

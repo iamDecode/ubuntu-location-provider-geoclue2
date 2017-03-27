@@ -12,6 +12,7 @@
 #include <core/dbus/types/object_path.h>
 #include <core/dbus/object.h>
 #include "position.h"
+#include "geoclue2.h"
 #include <atomic>
 
 class ULSObject;
@@ -19,6 +20,7 @@ class GeoclueObject {
 
     private:
         std::shared_ptr<core::dbus::Object> obj;
+        std::shared_ptr<core::dbus::Signal<org::freedesktop::Geoclue2::Client::LocationUpdated, std::tuple<core::dbus::types::ObjectPath, core::dbus::types::ObjectPath>>> luSignal;
         core::dbus::Bus::Ptr bus;
         std::shared_ptr<core::dbus::Service> service;
         std::shared_ptr<core::dbus::Object> client;

@@ -9,7 +9,6 @@
 #include <core/dbus/service.h>
 #include <core/dbus/types/stl/string.h>
 #include <core/dbus/types/object_path.h>
-#include "geoclue.h"
 #include "service.hpp"
 
 class GeoclueObject;
