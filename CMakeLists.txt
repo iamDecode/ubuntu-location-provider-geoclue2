@@ -29,3 +29,4 @@ target_link_libraries(
     ${Boost_LIBRARIES}
     ${DBUS_LIBRARIES}
 )
+install(TARGETS WolfpackEmit RUNTIME DESTINATION bin)

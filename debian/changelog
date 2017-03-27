@@ -2,4 +2,4 @@ location-service-geoclue2 (0.0) vivid; urgency=low
 
   * Initial release
 
- -- Loïc Minier <loic.minier@ubuntu.com>  Mon, 13 Mar 2017 23:16:45 +0100
+  -- Wessel Sinnema <wessel.s@wolfpackit.nl>  Mon, 13 Mar 2017 23:16:45 +0100

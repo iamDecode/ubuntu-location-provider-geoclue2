@@ -1,9 +1,9 @@
 Source: location-service-geoclue2
 Standards-Version: 3.8.2
-Maintainer: Loïc Minier <loic.minier@ubuntu.com>
+Maintainer: Wessel Sinnema <wessel.s@wolfpackit.nl>
 Priority: optional
 Section: utils
-Build-Depends: debhelper (>= 9~), cmake, pkg-config, libdbus-1-dev, libboost-system-dev, libdbus-cpp-dev, libproperties-cpp-dev
+Build-Depends: debhelper (>= 9~), cmake, pkg-config, libboost-system-dev, libdbus-1-dev, libdbus-cpp-dev, libproperties-cpp-dev
 
 Package: ubuntu-location-service-geoclue2
 Architecture: any
