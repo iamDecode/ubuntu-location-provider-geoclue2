@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Make sure Ubuntu Location Service uses ubuntu-location-provider-geoclue2
+sudo sed -i 's/ubuntu\.espoo/wolfpack\.geoclue2/g' /etc/init/ubuntu-location-service.override
+sudo sed -i 's/ubuntu\/espoo/wolfpack\/geoclue2/g' /etc/init/ubuntu-location-service.override
+
+# Fix permissions for starting ubuntu-location-provider-geoclue2 automatically
+chown root:root /etc/init.d/ubuntu-location-provider-geoclue2
+update-rc.d ubuntu-location-provider-geoclue2 defaults
+update-rc.d ubuntu-location-provider-geoclue2 enable
+
+# Start provider
+/etc/init.d/ubuntu-location-provider-geoclue2 start
+
+# Restart Ubuntu Location Service with the new geoclue2 provider
+service ubuntu-location-service restart

@@ -1,5 +1,5 @@
-location-service-geoclue2 (0.0) vivid; urgency=low
+ubuntu-location-provider-geoclue2 (1.0) vivid; urgency=low
 
   * Initial release
 
-  -- Wessel Sinnema <wessel.s@wolfpackit.nl>  Mon, 13 Mar 2017 23:16:45 +0100
+ -- Wessel Sinnema <wessel.s@wolfpackit.nl>  Mon, 05 Apr 2017 15:56:25 +0200

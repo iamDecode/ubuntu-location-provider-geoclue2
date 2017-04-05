@@ -1,11 +1,11 @@
-Source: location-service-geoclue2
+Source: ubuntu-location-provider-geoclue2
 Standards-Version: 3.8.2
 Maintainer: Wessel Sinnema <wessel.s@wolfpackit.nl>
 Priority: optional
 Section: utils
 Build-Depends: debhelper (>= 9~), cmake, pkg-config, libboost-system-dev, libdbus-1-dev, libdbus-cpp-dev, libproperties-cpp-dev
 
-Package: ubuntu-location-service-geoclue2
+Package: ubuntu-location-provider-geoclue2
 Architecture: any
-Description: Geoclue2 provider for location service
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Geoclue2 provider for Ubuntu Location Service
+Depends: ${shlibs:Depends}, ${misc:Depends}, geoclue-2.0

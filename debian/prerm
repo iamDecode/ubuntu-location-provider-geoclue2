@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Reset Ubuntu Location Service configuration to state before ubuntu-location-provider-geoclue2 was installed
+sudo sed -i 's/wolfpack\.geoclue2/ubuntu\.espoo/g' /etc/init/ubuntu-location-service.override
+sudo sed -i 's/wolfpack\/geoclue2/ubuntu\/espoo/g' /etc/init/ubuntu-location-service.override
+
+# Disable startup service
+update-rc.d ubuntu-location-provider-geoclue2 disable
+
+# Stop provider
+/etc/init.d/ubuntu-location-provider-geoclue2 stop
+
+# Restart Ubuntu Location Service without geoclue2 provider
+service ubuntu-location-service restart
