@@ -27,8 +27,6 @@ int main(int, char**){
     ulsObj->registerStartHeadingUpdatesMethod();
     ulsObj->registerStopHeadingUpdatesMethod();
     ulsObj->registerOnReferenceLocationChangedMethod();
-    gcObj->prepareClient();
-    gcObj->connectPositionChangedSignal();
-    gcObj->authorize();
+    std::cerr << "Finished setup" << "\n";
     BUS->run();
 }

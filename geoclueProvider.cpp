@@ -106,7 +106,9 @@ void GeoclueObject::prepareClient() {
      * the level of accuracy requested by, or allowed by the client. We have set this to 8.
     */
 
+    std::cerr << "Prepare client";
     this->client = this->GetClient();
+    std::cerr << client->path();
     auto property = this->client->get_property<org::freedesktop::Geoclue2::Client::DistanceThreshold>();
     property->set(10);
     auto ral = this->client->get_property<org::freedesktop::Geoclue2::Client::RequestedAccuracyLevel>();
@@ -130,7 +132,10 @@ void GeoclueObject::authorize() {
 void GeoclueObject::startClient() {
     // Start the Geoclue Client
     std::cerr << "Start client" << "\n";
-    this->client->invoke_method_synchronously<org::freedesktop::Geoclue2::Client::Start, void>();
+    this->prepareClient();
+    this->connectPositionChangedSignal();
+    this->authorize();
+    this->client->invoke_method_asynchronously<org::freedesktop::Geoclue2::Client::Start, void>();
     auto current_loc = this->client->get_property<org::freedesktop::Geoclue2::Client::Location>()->get();
     // If the location property is already set, use it
     if (current_loc != types::ObjectPath("/")){
@@ -142,7 +147,7 @@ void GeoclueObject::startClient() {
 void GeoclueObject::stopClient() {
     // Stops the Geoclue client again
     std::cerr << "Stop client" << "\n";
-    this->client->invoke_method_asynchronously<org::freedesktop::Geoclue2::Client::Stop, void>();
+    this->client->invoke_method_synchronously<org::freedesktop::Geoclue2::Client::Stop, void>();
 }
 
 void GeoclueObject::startVelocityUpdates() {
